@@ -1,0 +1,21 @@
+server {
+    listen 443 ssl;
+    server_name example.zaqbest.com;
+
+    include /etc/nginx/snippets/ssl-${CERT_TYPE}.conf;
+
+    root /usr/share/nginx/html/example.zaqbest.com;
+    index index.html;
+
+    include /etc/nginx/snippets/error-pages.conf;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 80;
+    server_name example.zaqbest.com;
+    return 301 https://$host$request_uri;
+}
