@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:1.30.3-alpine
+    image: ${REGISTRY_PREFIX:-}nginx:1.30.3-alpine
     restart: always
     ports:
       - "${NGINX_HTTP_PORT}:80"
