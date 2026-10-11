@@ -2,22 +2,26 @@ services:
   nginx:
     image: ${REGISTRY_PREFIX:-}nginx:1.30.3-alpine
     restart: always
+    networks:
+      - docker-kit-network
     ports:
       - "${NGINX_HTTP_PORT}:80"
       - "${NGINX_HTTPS_PORT}:443"
-    environment:
-      NGINX_ENVSUBST_FILTER_VARIABLES: "CERT_TYPE CERT_DOMAIN"
-      CERT_TYPE: ${CERT_TYPE}
-      CERT_DOMAIN: ${CERT_DOMAIN}
     volumes:
       # templates/*.template 会由官方镜像的启动脚本 envsubst 后输出到 /etc/nginx/conf.d/
       - ./templates:/etc/nginx/templates:ro
-      - ./certs:/etc/nginx/certs:ro
+      - certs:/etc/nginx/certs
       - ./snippets:/etc/nginx/snippets:ro
       # 静态站点内容（如 sap.zaqbest.com）
       - ./html:/usr/share/nginx/html:ro
+      - ./scripts:/scripts:ro
     mem_limit: 128m
-
+    pre_start:
+      - image: alpine
+        command: ["/scripts/pull-certs.sh", "/etc/nginx/certs"]
+        user: root
+volumes:
+  certs:
 networks:
   docker-kit-network:
     external: true

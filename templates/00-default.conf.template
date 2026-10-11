@@ -17,11 +17,7 @@ server {
     listen 443 ssl default_server;
     server_name _;
 
-    # 复用一份现有证书完成 TLS 握手，内容一律 404
-    ssl_certificate     /etc/nginx/certs/${CERT_TYPE}/${CERT_DOMAIN}/server.crt;
-    ssl_certificate_key /etc/nginx/certs/${CERT_TYPE}/${CERT_DOMAIN}/server.key;
-    ssl_protocols       TLSv1.2 TLSv1.3;
-    ssl_ciphers         HIGH:!aNULL:!MD5;
+    include /etc/nginx/snippets/ssl.conf;
 
     include /etc/nginx/snippets/error-pages.conf;
 
