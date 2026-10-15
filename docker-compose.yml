@@ -1,7 +1,6 @@
 services:
   nginx:
     image: ${REGISTRY_PREFIX:-}nginx:1.30.3-alpine
-    container_name: nginx
     restart: always
     networks:
       - docker-kit-network
