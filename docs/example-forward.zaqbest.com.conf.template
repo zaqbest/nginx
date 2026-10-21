@@ -2,14 +2,14 @@ server {
     listen 443 ssl;
     server_name example-forward.zaqbest.com;
 
-    include /etc/nginx/snippets/ssl-letsencrypt.conf;
+    include /etc/nginx/snippets/ssl.conf;
 
     # 允许上传大文件（Maven artifact）
     client_max_body_size 1g;
 
     # 使用 Docker 内部 DNS，启动时不依赖上游容器
     resolver 127.0.0.11 valid=30s;
-    set $upstream_nexus http://example-forward.zaqbest.com:8081;
+    set $upstream_site http://<hostname>:<port>;
 
     # 接管上游返回的错误状态码，并使用自定义错误页
     # 注意：Nexus 自身也是完整应用，通常上游 404 应由 Nexus 自己处理，
@@ -18,7 +18,7 @@ server {
     include /etc/nginx/snippets/error-pages.conf;
 
     location / {
-        proxy_pass         $upstream_nexus;
+        proxy_pass         $upstream_site;
         include            /etc/nginx/snippets/proxy-headers.conf;
 
         # 仅在上游宕机/超时时展示自定义 50x 页面
