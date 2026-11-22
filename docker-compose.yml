@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: ${REGISTRY_PREFIX:-}nginx:1.30.3-alpine
+    image: registry.cn-hangzhou.aliyuncs.com/zaqbest/nginx:1.30.3-alpine
     restart: always
     networks:
       - docker-kit-network
